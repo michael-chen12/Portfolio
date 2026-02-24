@@ -83,7 +83,7 @@ function Navbar({ name = 'Your Name' }) {
               <button
                 key={link.id}
                 onClick={() => handleNavClick(link.id)}
-                className={`text-gray-700 hover:text-blue-600 transition-colors ${
+                className={`text-gray-700 hover:text-blue-600 transition-colors cursor-pointer ${
                   activeSection === link.id ? 'text-blue-600 font-medium' : ''
                 }`}
               >
@@ -130,7 +130,7 @@ function Navbar({ name = 'Your Name' }) {
             <button
               key={link.id}
               onClick={() => handleNavClick(link.id)}
-              className={`block w-full text-left px-3 py-3 text-base font-medium rounded-md hover:bg-gray-100 transition-colors ${
+              className={`block w-full text-left px-3 py-3 text-base font-medium rounded-md hover:bg-gray-100 transition-colors cursor-pointer ${
                 activeSection === link.id
                   ? 'text-blue-600 bg-blue-50'
                   : 'text-gray-700'
