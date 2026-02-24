@@ -1,102 +1,103 @@
 import { useState, useEffect } from 'react'
-import './Navbar.css'
 
-export default function Navbar() {
+function Navbar({ name = 'Your Name' }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState('home')
 
-  // Close mobile menu on Escape key press
-  useEffect(() => {
-    const handleEscape = (event) => {
-      if (event.key === 'Escape' && isMobileMenuOpen) {
-        setIsMobileMenuOpen(false)
-      }
+  const navLinks = [
+    { id: 'home', label: 'Home' },
+    { id: 'projects', label: 'Projects' },
+    { id: 'about', label: 'About' },
+    { id: 'contact', label: 'Contact' },
+  ]
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen)
+  }
+
+  const handleNavClick = (sectionId) => {
+    setIsMobileMenuOpen(false)
+    const element = document.getElementById(sectionId)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
     }
-
-    document.addEventListener('keydown', handleEscape)
-    return () => document.removeEventListener('keydown', handleEscape)
-  }, [isMobileMenuOpen])
+  }
 
   return (
-    <nav aria-label="Main navigation" className="sticky top-0 z-50 backdrop-blur-lg bg-white/80 border-b border-gray-200/20 shadow-sm">
-      <div className="px-6 md:px-12 py-4">
-        {/* Desktop and Mobile Container */}
-        <div className="flex items-center justify-between">
+    <nav className="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
           {/* Logo/Name */}
-          <div className="text-2xl md:text-3xl font-bold">
-            Michael Chen
+          <div className="flex-shrink-0">
+            <span className="text-xl font-semibold text-gray-900">{name}</span>
           </div>
 
-          {/* Desktop Navigation - Hidden on mobile */}
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#projects" className="nav-link text-base font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded">
-              Projects
-            </a>
-            <a href="#about" className="nav-link text-base font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded">
-              About
-            </a>
-            <a href="#contact" className="nav-link text-base font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded">
-              Contact
-            </a>
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex space-x-8">
+            {navLinks.map((link) => (
+              <button
+                key={link.id}
+                onClick={() => handleNavClick(link.id)}
+                className={`text-gray-700 hover:text-blue-600 transition-colors ${
+                  activeSection === link.id ? 'text-blue-600 font-medium' : ''
+                }`}
+              >
+                {link.label}
+              </button>
+            ))}
           </div>
 
-          {/* Mobile Hamburger Button - Hidden on desktop */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle menu"
-            aria-expanded={isMobileMenuOpen}
-            className="md:hidden w-11 h-11 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded"
-          >
-            {/* Hamburger Icon */}
-            <div className="w-6 h-5 flex flex-col justify-between">
-              <span className={`block h-0.5 w-full bg-current transition-transform duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`}></span>
-              <span className={`block h-0.5 w-full bg-current transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-0' : ''}`}></span>
-              <span className={`block h-0.5 w-full bg-current transition-transform duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`}></span>
-            </div>
-          </button>
+          {/* Mobile Hamburger Button */}
+          <div className="md:hidden">
+            <button
+              onClick={toggleMobileMenu}
+              aria-label="Toggle navigation menu"
+              aria-expanded={isMobileMenuOpen}
+              className="text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded p-2"
+            >
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                {isMobileMenuOpen ? (
+                  <path d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Backdrop Overlay - Only visible when mobile menu is open */}
-      {isMobileMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 transition-opacity duration-300 md:hidden"
-          onClick={() => setIsMobileMenuOpen(false)}
-          aria-hidden="true"
-        ></div>
-      )}
-
-      {/* Mobile Drawer - Slides in from right */}
+      {/* Mobile Menu */}
       <div
-        role="dialog"
-        aria-modal="true"
-        className={`fixed top-0 right-0 h-screen w-64 backdrop-blur-lg bg-white/80 shadow-lg transform transition-transform duration-300 ease-in-out md:hidden ${
-          isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        className={`md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'}`}
+        aria-hidden={!isMobileMenuOpen}
       >
-        <div className="flex flex-col gap-6 p-8 pt-20">
-          <a
-            href="#projects"
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="nav-link text-lg font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded"
-          >
-            Projects
-          </a>
-          <a
-            href="#about"
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="nav-link text-lg font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded"
-          >
-            About
-          </a>
-          <a
-            href="#contact"
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="nav-link text-lg font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 rounded"
-          >
-            Contact
-          </a>
+        <div className="px-2 pt-2 pb-3 space-y-1 bg-white shadow-lg">
+          {navLinks.map((link) => (
+            <button
+              key={link.id}
+              onClick={() => handleNavClick(link.id)}
+              className={`block w-full text-left px-3 py-3 text-base font-medium rounded-md hover:bg-gray-100 transition-colors ${
+                activeSection === link.id
+                  ? 'text-blue-600 bg-blue-50'
+                  : 'text-gray-700'
+              }`}
+            >
+              {link.label}
+            </button>
+          ))}
         </div>
       </div>
     </nav>
   )
 }
+
+export default Navbar
