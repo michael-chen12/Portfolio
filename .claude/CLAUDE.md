@@ -1,127 +1,75 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository. A test-driven development project (TDD)
+Agent guide for this repository.
 
-## Always Do First
-- **Invoke the `frontend-design` skill** before writing any frontend code, every session, no exceptions.
+## Core Rules
 
-## Technology Stack
+1. Invoke `frontend-design` before frontend implementation.
+2. Invoke `brainstorming` before feature/component implementation.
+3. Ask 2-3 clarifying questions before coding.
+4. Get explicit user approval before writing implementation code.
+5. Do not run tests unless the user explicitly asks.
+6. Do not add unrequested features or sections.
+7. For feature work, use a clean `claude/[feature-name]` branch.
 
-This is a portfolio website built with:
-- **React 19.2** - UI framework
-- **Vite 7.3** - Build tool and dev server with HMR (Hot Module Replacement)
-- **TailwindCSS 4.2** - Utility-first CSS framework
-- **ESLint 9.39** - Code linting with React Hooks and React Refresh plugins
+## Default Workflow
 
-## Development Commands
+1. Clarify scope and acceptance criteria.
+2. Confirm branch hygiene.
+3. Draft and confirm a short plan/spec.
+4. Write tests first.
+5. Implement approved scope only.
+6. Validate and summarize.
+
+## Project Snapshot
+
+- React 19 + Vite 7
+- Tailwind CSS 4 (`@tailwindcss/postcss`)
+- ESLint 9 (flat config)
+- Vitest + Testing Library
+- Playwright e2e
+- ESM (`"type": "module"`)
+- No Prettier configured
+
+## Commands
 
 ```bash
-# Install dependencies (required after clone)
 npm install
-
-# Start development server (runs on http://localhost:5173 by default)
 npm run dev
-
-# Build for production (outputs to ./dist)
 npm run build
-
-# Preview production build locally
 npm run preview
-
-# Run ESLint checks
 npm run lint
+npm run test
+npm run test:ui
+npm run test:coverage
+npm run test:e2e
+npm run test:e2e:ui
 ```
 
-## Project Structure
+Only run test commands when explicitly requested.
 
-```
-/
-├── src/
-│   ├── main.jsx          # Application entry point
-│   ├── App.jsx           # Root component
-│   ├── App.css           # Component-specific styles
-│   ├── index.css         # Global styles with Tailwind directives
-│   └── assets/           # Static assets (images, icons, etc.)
-├── public/               # Static files copied as-is to dist
-├── index.html            # HTML entry point (Vite uses this for HMR)
-├── vite.config.js        # Vite configuration
-├── tailwind.config.js    # Tailwind CSS configuration
-├── postcss.config.js     # PostCSS configuration (for Tailwind)
-└── eslint.config.js      # ESLint configuration (flat config format)
-```
+## Key Paths
 
-## Architecture Notes
+- `.claude/plugins/portfolio-rules/`
+- `.claude/commands/`
+- `.claude/agents/`
+- `src/`
+- `docs/plans/`
+- `eslint.config.js`, `vite.config.js`, `tailwind.config.js`, `postcss.config.js`, `playwright.config.js`
 
-### Vite Configuration
-- Uses `@vitejs/plugin-react` for Fast Refresh via Babel
-- Entry point is `index.html` (not a JS file) - this is Vite's convention
-- Dev server provides instant HMR for React components
+## Code Standards
 
-### TailwindCSS Setup
-- **Uses Tailwind CSS v4** - Note: v4 requires `@tailwindcss/postcss` plugin
-- Configured to scan all HTML and JSX/TSX files in `src/` for classes
-- Base directives imported in `src/index.css`
-- PostCSS configuration uses `@tailwindcss/postcss` (not standalone `tailwindcss`)
+- Functional React components.
+- Naming: `PascalCase` components, `camelCase` vars/functions.
+- Tailwind-first styling; local CSS when needed.
+- Semantic HTML, keyboard support, visible focus.
+- ESLint should pass for touched code.
 
-### ESLint Configuration
-- Uses modern flat config format (eslint.config.js)
-- Configured for React Hooks rules enforcement
-- React Refresh plugin ensures components are HMR-compatible
-- Ignores `dist/` directory
-- Allows unused variables starting with uppercase (component pattern)
+## Done Checklist
 
-### Module System
-- Package is set to `"type": "module"` - uses ES modules throughout
-- All imports/exports use ESM syntax
-- Config files use `export default` instead of `module.exports`
+- Scope complete with no extras.
+- Workflow rules followed (questions, approval, TDD order).
+- Any skipped test/lint/build execution is explicitly stated.
+- Changes are summarized with rationale.
 
-## Development Guidelines
-
-### Adding New Components
-- Create components in `src/components/[Component Name]`
-- Separate `.css` file, test file and component file
-- Use `.jsx` extension for files containing JSX
-- Import styles using `import './Component.css'` if needed
-- Use Tailwind utility classes for styling when possible
-
-### Naming Conventions
-- Variable naming should be in pascalCase format (eg. michaelChen)
-
-### Styling Approach
-- Primary styling method: TailwindCSS utility classes
-- Global styles: Add to `src/index.css` after Tailwind directives
-
-### Hard Rules
-- Before implementation (Component or feature), Make sure there is no uncommited changes and after that, Git switch to a new branch with naming as claude/[feature of component name] 
-- Always generate and write unit test and E2E test cases before feature implementation and only run unit test and not e2e test. do not run tests unless I tell you to do it.
-- Ask at least 2 to 3 questions to grab user input regarding the feature or component implementation.
-- Do not write any code unless I told you so.
-- Do not add any sections that I never mention.
-
-### Build Output
-- Use vercel-react-best-practices to ensure code quality and performance
-- Production builds output to `./dist`
-- Assets are fingerprinted for cache busting
-- `index.html` is processed and included in dist
-- Public files are copied to dist root
-
-### HMR (Hot Module Replacement)
-- Changes to React components trigger instant updates without page reload
-- CSS changes are injected without reload
-- If HMR fails, Vite performs full page reload as fallback
-
----
-
-## Performance & SEO bar
-Performance:
-- Keep JS bundle small; don’t add big client-only libraries casually
-- Prefer static rendering for marketing pages when possible
-- Optimize images (size, format, lazy loading)
-
-SEO:
-- Use Next.js metadata API (`app/*/metadata`)
-- Add Open Graph + Twitter cards
-- Add `sitemap.xml` + `robots.txt`
-- Each project detail page should have unique title/description
-
----
+If command/agent templates conflict with repo reality, follow actual repository config first.
