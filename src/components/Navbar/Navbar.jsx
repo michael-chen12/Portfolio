@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react'
 
+const NAV_LINKS = [
+  { id: 'home', label: 'Home' },
+  { id: 'projects', label: 'Projects' },
+  { id: 'about', label: 'About' },
+  { id: 'contact', label: 'Contact' },
+]
+
 function Navbar({ name = 'Your Name' }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
-
-  const navLinks = [
-    { id: 'home', label: 'Home' },
-    { id: 'projects', label: 'Projects' },
-    { id: 'about', label: 'About' },
-    { id: 'contact', label: 'Contact' },
-  ]
 
   useEffect(() => {
     const observerOptions = {
@@ -29,7 +29,7 @@ function Navbar({ name = 'Your Name' }) {
     const observer = new IntersectionObserver(observerCallback, observerOptions)
 
     // Observe all sections
-    const sections = navLinks.map(link => link.id)
+    const sections = NAV_LINKS.map(link => link.id)
     sections.forEach((sectionId) => {
       const element = document.getElementById(sectionId)
       if (element) {
@@ -66,7 +66,7 @@ function Navbar({ name = 'Your Name' }) {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-8">
-            {navLinks.map((link) => (
+            {NAV_LINKS.map((link) => (
               <button
                 key={link.id}
                 onClick={() => handleNavClick(link.id)}
@@ -113,7 +113,7 @@ function Navbar({ name = 'Your Name' }) {
         aria-hidden={!isMobileMenuOpen}
       >
         <div className="px-2 pt-2 pb-3 space-y-1 bg-white shadow-lg">
-          {navLinks.map((link) => (
+          {NAV_LINKS.map((link) => (
             <button
               key={link.id}
               onClick={() => handleNavClick(link.id)}
