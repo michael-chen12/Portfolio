@@ -1,6 +1,9 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository. A test-driven development project (TDD)
+
+## Always Do First
+- **Invoke the `frontend-design` skill** before writing any frontend code, every session, no exceptions.
 
 ## Technology Stack
 
@@ -75,8 +78,8 @@ npm run lint
 ## Development Guidelines
 
 ### Adding New Components
-- Create components in `src/components/`
-- Separate `.css` file and component file
+- Create components in `src/components/[Component Name]`
+- Separate `.css` file, test file and component file
 - Use `.jsx` extension for files containing JSX
 - Import styles using `import './Component.css'` if needed
 - Use Tailwind utility classes for styling when possible
@@ -86,15 +89,14 @@ npm run lint
 
 ### Styling Approach
 - Primary styling method: TailwindCSS utility classes
-- Component-specific CSS: Create `.css` files alongside components
 - Global styles: Add to `src/index.css` after Tailwind directives
-- For creating new components, call frontend-design skills
 
-### General Rules
+### Hard Rules
 - Before implementation (Component or feature), Make sure there is no uncommited changes and after that, Git switch to a new branch with naming as claude/[feature of component name] 
-- Always generate unit test and E2E test cases after feature implementation
+- Always generate and write unit test and E2E test cases before feature implementation and only run unit test and not e2e test. do not run tests unless I tell you to do it.
 - Ask at least 2 to 3 questions to grab user input regarding the feature or component implementation.
 - Do not write any code unless I told you so.
+- Do not add any sections that I never mention.
 
 ### Build Output
 - Use vercel-react-best-practices to ensure code quality and performance
