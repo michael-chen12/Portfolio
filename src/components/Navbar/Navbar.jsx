@@ -4,6 +4,13 @@ function Navbar({ name = 'Your Name' }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
 
+  const navLinks = [
+    { id: 'home', label: 'Home' },
+    { id: 'projects', label: 'Projects' },
+    { id: 'about', label: 'About' },
+    { id: 'contact', label: 'Contact' },
+  ]
+
   useEffect(() => {
     const observerOptions = {
       root: null,
@@ -22,7 +29,7 @@ function Navbar({ name = 'Your Name' }) {
     const observer = new IntersectionObserver(observerCallback, observerOptions)
 
     // Observe all sections
-    const sections = ['home', 'projects', 'about', 'contact']
+    const sections = navLinks.map(link => link.id)
     sections.forEach((sectionId) => {
       const element = document.getElementById(sectionId)
       if (element) {
@@ -32,21 +39,9 @@ function Navbar({ name = 'Your Name' }) {
 
     // Cleanup
     return () => {
-      sections.forEach((sectionId) => {
-        const element = document.getElementById(sectionId)
-        if (element) {
-          observer.unobserve(element)
-        }
-      })
+      observer.disconnect()
     }
   }, [])
-
-  const navLinks = [
-    { id: 'home', label: 'Home' },
-    { id: 'projects', label: 'Projects' },
-    { id: 'about', label: 'About' },
-    { id: 'contact', label: 'Contact' },
-  ]
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
