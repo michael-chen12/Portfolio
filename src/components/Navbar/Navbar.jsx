@@ -69,25 +69,30 @@ function Navbar({ name = 'Your Name' }) {
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+    <nav className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md shadow-soft z-50">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20">
+        <div className="flex justify-between items-center h-20">
           {/* Logo/Name */}
           <div className="flex-shrink-0">
-            <span className="text-xl font-semibold text-gray-900">{name}</span>
+            <span className="text-2xl font-display font-bold text-black">{name}</span>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-8">
+          <div className="hidden md:flex items-center space-x-8">
             {NAV_LINKS.map((link) => (
               <button
                 key={link.id}
                 onClick={() => handleNavClick(link.id)}
-                className={`text-gray-700 hover:text-blue-600 transition-colors cursor-pointer ${
-                  activeSection === link.id ? 'text-blue-600 font-medium' : ''
+                className={`relative text-sm font-semibold transition-colors cursor-pointer group ${
+                  activeSection === link.id ? 'text-teal' : 'text-gray-700 hover:text-teal'
                 }`}
               >
                 {link.label}
+                <span
+                  className={`absolute -bottom-1 left-0 w-full h-0.5 bg-teal transform origin-left transition-transform duration-300 ${
+                    activeSection === link.id ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                  }`}
+                />
               </button>
             ))}
           </div>
@@ -98,7 +103,7 @@ function Navbar({ name = 'Your Name' }) {
               onClick={toggleMobileMenu}
               aria-label="Toggle navigation menu"
               aria-expanded={isMobileMenuOpen}
-              className="text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-600 rounded p-2"
+              className="text-gray-700 hover:text-teal focus:outline-none focus-visible:ring-2 focus-visible:ring-teal rounded-lg p-2 transition-colors"
             >
               <svg
                 className="h-6 w-6"
@@ -125,15 +130,15 @@ function Navbar({ name = 'Your Name' }) {
         className={`md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'}`}
         aria-hidden={!isMobileMenuOpen}
       >
-        <div className="px-2 pt-2 pb-3 space-y-1 bg-white shadow-lg">
+        <div className="px-6 pt-2 pb-4 space-y-1 bg-white/95 backdrop-blur-md shadow-lg">
           {NAV_LINKS.map((link) => (
             <button
               key={link.id}
               onClick={() => handleNavClick(link.id)}
-              className={`block w-full text-left px-3 py-3 text-base font-medium rounded-md hover:bg-gray-100 transition-colors cursor-pointer ${
+              className={`block w-full text-left px-4 py-3 text-base font-semibold rounded-xl transition-all cursor-pointer ${
                 activeSection === link.id
-                  ? 'text-blue-600 bg-blue-50'
-                  : 'text-gray-700'
+                  ? 'text-white bg-teal'
+                  : 'text-gray-700 hover:bg-teal/10 hover:text-teal'
               }`}
             >
               {link.label}

@@ -1,5 +1,72 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
 html {
   scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #FAFAF9;
+  color: #0A0A0A;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Sora', sans-serif;
+}
+
+/* Selection styling */
+::selection {
+  background-color: rgba(92, 181, 181, 0.3);
+  color: #0A0A0A;
+}
+
+::-moz-selection {
+  background-color: rgba(92, 181, 181, 0.3);
+  color: #0A0A0A;
+}
+
+/* Smooth scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FAFAF9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #5CB5B5;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4A9999;
+}
+
+/* Focus visible for accessibility */
+*:focus-visible {
+  outline: 2px solid #5CB5B5;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Reduced motion support - preserve user-initiated hover effects */
+@media (prefers-reduced-motion: reduce) {
+  /* Disable auto-playing animations and scroll-triggered effects */
+  *:not(:hover):not(:focus):not(:active),
+  *:not(:hover):not(:focus):not(:active)::before,
+  *:not(:hover):not(:focus):not(:active)::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Allow faster but still visible hover transitions */
+  *:hover,
+  *:focus,
+  *:active {
+    transition-duration: 150ms !important;
+  }
 }
