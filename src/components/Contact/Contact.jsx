@@ -167,6 +167,7 @@ const Contact = () => {
               scale: isSuccess ? 1 : 0.8,
             }}
             className="absolute inset-0 bg-teal/95 backdrop-blur-sm z-50 flex items-center justify-center rounded-3xl"
+            style={{ pointerEvents: isSuccess ? 'auto' : 'none' }}
           >
             <div className="text-center text-white space-y-4">
               <motion.div
