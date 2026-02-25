@@ -1,5 +1,6 @@
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import userEvent from '@testing-library/user-event';
 import Contact from './Contact';
 
 describe('Contact', () => {
@@ -38,5 +39,225 @@ describe('Contact', () => {
     const locationText = screen.getByText(/san francisco, ca/i);
     // Location should be inside a div wrapper, not an anchor
     expect(locationText.closest('a')).toBeNull();
+  });
+
+  describe('Form Submission', () => {
+    let fetchSpy;
+
+    beforeEach(() => {
+      // Mock fetch globally
+      fetchSpy = vi.spyOn(global, 'fetch');
+    });
+
+    afterEach(() => {
+      fetchSpy.mockRestore();
+    });
+
+    it('should submit form successfully and show success message', async () => {
+      const user = userEvent.setup();
+
+      // Mock successful API response
+      fetchSpy.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true, id: 'test-id' }),
+      });
+
+      render(<Contact />);
+
+      // Fill out form
+      const nameInput = screen.getByLabelText(/your name/i);
+      const emailInput = screen.getByLabelText(/email address/i);
+      const messageInput = screen.getByLabelText(/your message/i);
+
+      await user.type(nameInput, 'John Doe');
+      await user.type(emailInput, 'john@example.com');
+      await user.type(messageInput, 'Test message');
+
+      // Submit form
+      const submitButton = screen.getByRole('button', { name: /send message/i });
+      await user.click(submitButton);
+
+      // Verify fetch was called with correct data
+      expect(fetchSpy).toHaveBeenCalledWith(
+        '/.netlify/functions/send-email',
+        expect.objectContaining({
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: 'John Doe',
+            email: 'john@example.com',
+            message: 'Test message',
+          }),
+        })
+      );
+
+      // Wait for success message to appear
+      await waitFor(() => {
+        expect(screen.getByText(/message sent!/i)).toBeInTheDocument();
+      });
+    });
+
+    it('should display error message when API call fails', async () => {
+      const user = userEvent.setup();
+
+      // Mock failed API response
+      fetchSpy.mockResolvedValueOnce({
+        ok: false,
+        json: async () => ({ error: 'Failed to send email' }),
+      });
+
+      render(<Contact />);
+
+      // Fill out form
+      await user.type(screen.getByLabelText(/your name/i), 'John Doe');
+      await user.type(screen.getByLabelText(/email address/i), 'john@example.com');
+      await user.type(screen.getByLabelText(/your message/i), 'Test message');
+
+      // Submit form
+      await user.click(screen.getByRole('button', { name: /send message/i }));
+
+      // Wait for error message to appear
+      await waitFor(() => {
+        expect(screen.getByText(/failed to send email/i)).toBeInTheDocument();
+      });
+    });
+
+    it('should preserve form data when submission fails', async () => {
+      const user = userEvent.setup();
+
+      // Mock failed API response
+      fetchSpy.mockResolvedValueOnce({
+        ok: false,
+        json: async () => ({ error: 'Network error' }),
+      });
+
+      render(<Contact />);
+
+      const testName = 'Jane Doe';
+      const testEmail = 'jane@example.com';
+      const testMessage = 'Important message';
+
+      // Fill out form
+      await user.type(screen.getByLabelText(/your name/i), testName);
+      await user.type(screen.getByLabelText(/email address/i), testEmail);
+      await user.type(screen.getByLabelText(/your message/i), testMessage);
+
+      // Submit form
+      await user.click(screen.getByRole('button', { name: /send message/i }));
+
+      // Wait for error
+      await waitFor(() => {
+        expect(screen.getByText(/network error/i)).toBeInTheDocument();
+      });
+
+      // Verify form data is still present
+      expect(screen.getByLabelText(/your name/i)).toHaveValue(testName);
+      expect(screen.getByLabelText(/email address/i)).toHaveValue(testEmail);
+      expect(screen.getByLabelText(/your message/i)).toHaveValue(testMessage);
+    });
+
+    it('should clear form after successful submission', async () => {
+      const user = userEvent.setup();
+
+      // Mock successful API response
+      fetchSpy.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true }),
+      });
+
+      render(<Contact />);
+
+      // Fill out form
+      await user.type(screen.getByLabelText(/your name/i), 'John Doe');
+      await user.type(screen.getByLabelText(/email address/i), 'john@example.com');
+      await user.type(screen.getByLabelText(/your message/i), 'Test message');
+
+      // Submit form
+      await user.click(screen.getByRole('button', { name: /send message/i }));
+
+      // Wait for success message
+      await waitFor(() => {
+        expect(screen.getByText(/message sent!/i)).toBeInTheDocument();
+      });
+
+      // Wait for form to clear (happens after 3 second delay)
+      await waitFor(
+        () => {
+          expect(screen.getByLabelText(/your name/i)).toHaveValue('');
+          expect(screen.getByLabelText(/email address/i)).toHaveValue('');
+          expect(screen.getByLabelText(/your message/i)).toHaveValue('');
+        },
+        { timeout: 4000 }
+      );
+    });
+
+    it('should dismiss error when dismiss button is clicked', async () => {
+      const user = userEvent.setup();
+
+      // Mock failed API response
+      fetchSpy.mockResolvedValueOnce({
+        ok: false,
+        json: async () => ({ error: 'Test error' }),
+      });
+
+      render(<Contact />);
+
+      // Fill and submit form
+      await user.type(screen.getByLabelText(/your name/i), 'John Doe');
+      await user.type(screen.getByLabelText(/email address/i), 'john@example.com');
+      await user.type(screen.getByLabelText(/your message/i), 'Test message');
+      await user.click(screen.getByRole('button', { name: /send message/i }));
+
+      // Wait for error message
+      await waitFor(() => {
+        expect(screen.getByText(/test error/i)).toBeInTheDocument();
+      });
+
+      // Click dismiss button
+      const dismissButton = screen.getByRole('button', { name: /dismiss error/i });
+      await user.click(dismissButton);
+
+      // Error should be removed
+      await waitFor(() => {
+        expect(screen.queryByText(/test error/i)).not.toBeInTheDocument();
+      });
+    });
+
+    it('should clear error when starting new submission', async () => {
+      const user = userEvent.setup();
+
+      // First submission fails
+      fetchSpy.mockResolvedValueOnce({
+        ok: false,
+        json: async () => ({ error: 'First error' }),
+      });
+
+      render(<Contact />);
+
+      // Fill and submit form (first time)
+      await user.type(screen.getByLabelText(/your name/i), 'John Doe');
+      await user.type(screen.getByLabelText(/email address/i), 'john@example.com');
+      await user.type(screen.getByLabelText(/your message/i), 'Test message');
+      await user.click(screen.getByRole('button', { name: /send message/i }));
+
+      // Wait for error
+      await waitFor(() => {
+        expect(screen.getByText(/first error/i)).toBeInTheDocument();
+      });
+
+      // Mock second submission (will succeed)
+      fetchSpy.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ success: true }),
+      });
+
+      // Submit again
+      await user.click(screen.getByRole('button', { name: /send message/i }));
+
+      // Error should be cleared immediately
+      await waitFor(() => {
+        expect(screen.queryByText(/first error/i)).not.toBeInTheDocument();
+      });
+    });
   });
 });
