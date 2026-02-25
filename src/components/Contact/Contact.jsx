@@ -12,6 +12,7 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState(null);
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -40,19 +41,38 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError(null); // Clear any previous errors
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      const response = await fetch('/.netlify/functions/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
 
-    console.log('Form submitted:', formData);
-    setIsSuccess(true);
+      const data = await response.json();
 
-    // Reset form after success
-    setTimeout(() => {
-      setFormData({ name: '', email: '', message: '' });
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send message');
+      }
+
+      // Success!
+      setIsSuccess(true);
+
+      // Reset form after success
+      setTimeout(() => {
+        setFormData({ name: '', email: '', message: '' });
+        setIsSubmitting(false);
+        setIsSuccess(false);
+      }, 3000);
+    } catch (err) {
+      console.error('Form submission error:', err);
+      setError(err.message || 'Something went wrong. Please try again.');
       setIsSubmitting(false);
-      setIsSuccess(false);
-    }, 3000);
+      // Don't clear form data on error - preserve user input
+    }
   };
 
   const handleChange = (e) => {
@@ -159,6 +179,32 @@ const Contact = () => {
               <p>I'll get back to you soon.</p>
             </div>
           </motion.div>
+
+          {/* Error notification */}
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="mb-6 p-4 bg-red-50 border-2 border-red-200 rounded-2xl flex items-start gap-3"
+            >
+              <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                <span className="text-white text-sm font-bold">!</span>
+              </div>
+              <div className="flex-1">
+                <p className="text-red-800 font-medium">{error}</p>
+              </div>
+              <button
+                onClick={() => setError(null)}
+                className="text-red-400 hover:text-red-600 transition-colors"
+                aria-label="Dismiss error"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </motion.div>
+          )}
 
           {/* Decorative corner */}
           <div className="absolute top-0 right-0 w-32 h-32 overflow-hidden">
