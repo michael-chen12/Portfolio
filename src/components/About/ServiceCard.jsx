@@ -1,6 +1,14 @@
 import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
 import { useState } from 'react';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
+import { Code2, Database, Briefcase, GraduationCap } from 'lucide-react';
+
+const iconMap = {
+  Code2,
+  Database,
+  Briefcase,
+  GraduationCap,
+};
 
 const ServiceCard = ({ service, index }) => {
   const prefersReducedMotion = useReducedMotion();
@@ -8,6 +16,8 @@ const ServiceCard = ({ service, index }) => {
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+
+  const IconComponent = iconMap[service.icon];
 
   const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [8, -8]), {
     stiffness: 400,
@@ -111,7 +121,9 @@ const ServiceCard = ({ service, index }) => {
             className="absolute inset-0 bg-teal opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500"
           />
 
-          <service.icon className="w-8 h-8 lg:w-10 lg:h-10 text-teal group-hover:text-white transition-colors duration-500 relative z-10" />
+          {IconComponent && (
+            <IconComponent className="w-8 h-8 lg:w-10 lg:h-10 text-teal group-hover:text-white transition-colors duration-500 relative z-10" />
+          )}
         </motion.div>
       </div>
 

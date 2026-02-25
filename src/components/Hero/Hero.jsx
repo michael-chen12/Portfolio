@@ -2,6 +2,7 @@ import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
 import { Github, Linkedin, Mail, MapPin, Sparkles } from 'lucide-react';
 import { useEffect } from 'react';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
+import { PERSONAL_INFO, HERO_CONTENT } from '../../data/personalInfo';
 
 const Hero = () => {
   const prefersReducedMotion = useReducedMotion();
@@ -114,40 +115,10 @@ const Hero = () => {
               className="space-y-4"
             >
               <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-display font-bold leading-[1.1] text-black">
-                Hi, I'm a{' '}
-                <span className="relative inline-block">
-                  <span className="bg-gradient-to-r from-teal via-teal-dark to-teal bg-clip-text text-transparent">
-                    Creative
-                  </span>
-                  {/* Decorative underline */}
-                  <motion.svg
-                    className="absolute -bottom-2 left-0 w-full"
-                    viewBox="0 0 300 12"
-                    initial={{ pathLength: 0 }}
-                    animate={{ pathLength: 1 }}
-                    transition={{ duration: 1.5, delay: 0.8, ease: "easeInOut" }}
-                  >
-                    <motion.path
-                      d="M0,6 Q150,0 300,6"
-                      stroke="#5CB5B5"
-                      strokeWidth="3"
-                      fill="none"
-                      strokeLinecap="round"
-                    />
-                  </motion.svg>
-                </span>
-                <br />
-                <span className="bg-gradient-to-r from-teal via-teal-dark to-teal bg-clip-text text-transparent">
-                  Developer
-                </span>
+                {HERO_CONTENT.headline}
               </h1>
               <p className="text-lg md:text-xl text-gray-600 font-body max-w-2xl leading-relaxed">
-                Crafting exceptional digital experiences with{' '}
-                <span className="font-semibold text-black relative inline-block group">
-                  5+ years
-                  <span className="absolute inset-x-0 bottom-0 h-2 bg-teal-light/30 -z-10 group-hover:h-full transition-all duration-300" />
-                </span>
-                {' '}of expertise in modern web development and user interface design.
+                {HERO_CONTENT.description}
               </p>
             </motion.div>
 
@@ -174,28 +145,6 @@ const Hero = () => {
                 <span className="relative z-10">Contact Me</span>
               </motion.a>
             </motion.div>
-
-            {/* Brand Logos Pill with hover effects */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="inline-flex items-center gap-4 px-6 py-3 bg-gradient-to-r from-lavender-light to-lavender/50 rounded-full shadow-soft backdrop-blur-sm"
-            >
-              <span className="text-sm font-medium text-gray-700">Trusted by</span>
-              <div className="flex items-center gap-3">
-                {['A', 'B', 'C'].map((letter) => (
-                  <motion.div
-                    key={letter}
-                    whileHover={{ scale: 1.2, rotate: 5 }}
-                    transition={{ type: "spring", stiffness: 400 }}
-                    className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-xs font-bold text-gray-600 shadow-sm cursor-pointer"
-                  >
-                    {letter}
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
           </div>
 
           {/* Right: Floating Cards with parallax */}
@@ -213,22 +162,17 @@ const Hero = () => {
               }}
               className="absolute top-0 right-0 w-64 md:w-80 bg-white rounded-3xl shadow-float p-6 cursor-pointer"
             >
-              <div className="aspect-[3/4] bg-gradient-to-br from-teal via-teal-dark to-teal rounded-2xl overflow-hidden mb-4 relative group">
-                <img
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop"
-                  alt="Profile"
-                  width="400"
-                  height="500"
-                  loading="eager"
-                  className="w-full h-full object-cover mix-blend-luminosity opacity-80 group-hover:opacity-90 transition-opacity duration-500"
-                />
+              <div className="aspect-[3/4] bg-gradient-to-br from-teal via-teal-dark to-teal rounded-2xl overflow-hidden mb-4 relative group flex items-center justify-center">
+                <div className="text-white text-6xl font-display font-bold opacity-80 group-hover:opacity-90 transition-opacity duration-500">
+                  MC
+                </div>
 
                 {/* Gradient overlay on hover */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
               <div className="flex items-center gap-2 text-gray-600">
                 <MapPin className="w-4 h-4 text-teal" />
-                <span className="text-sm font-medium">San Francisco, CA</span>
+                <span className="text-sm font-medium">{PERSONAL_INFO.location}</span>
               </div>
             </motion.div>
 
@@ -244,9 +188,9 @@ const Hero = () => {
               className="absolute bottom-12 left-0 bg-white/90 backdrop-blur-md rounded-2xl shadow-card p-4 space-y-3"
             >
               {[
-                { Icon: Github, href: 'https://github.com', delay: 0, label: 'GitHub Profile' },
-                { Icon: Linkedin, href: 'https://linkedin.com', delay: 0.1, label: 'LinkedIn Profile' },
-                { Icon: Mail, href: 'mailto:hello@example.com', delay: 0.2, label: 'Send Email' },
+                { Icon: Github, href: PERSONAL_INFO.github, delay: 0, label: 'GitHub Profile' },
+                { Icon: Linkedin, href: PERSONAL_INFO.linkedin, delay: 0.1, label: 'LinkedIn Profile' },
+                { Icon: Mail, href: `mailto:${PERSONAL_INFO.email}`, delay: 0.2, label: 'Send Email' },
               ].map(({ Icon, href, delay, label }) => (
                 <motion.a
                   key={href}

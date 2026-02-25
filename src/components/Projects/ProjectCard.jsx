@@ -68,20 +68,32 @@ const ProjectCard = ({ project, index, featured = false }) => {
       <div className={`relative overflow-hidden ${featured ? 'aspect-[16/9]' : 'aspect-[4/3]'}`}>
         <motion.div
           className="absolute inset-0"
-          whileHover={{ scale: 1.1 }}
+          whileHover={{ scale: project.isPlaceholder ? 1 : 1.1 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
           style={{
-            background: `linear-gradient(135deg, ${project.bgColor} 0%, ${project.bgColor}dd 100%)`,
+            background: project.isPlaceholder
+              ? 'linear-gradient(135deg, #E5E7EB 0%, #D1D5DB 100%)'
+              : project.image
+              ? `linear-gradient(135deg, rgba(92,181,181,0.1) 0%, rgba(92,181,181,0.05) 100%)`
+              : 'linear-gradient(135deg, #5CB5B5 0%, #4A9999 100%)',
           }}
         >
-          <img
-            src={project.image}
-            alt={project.title}
-            width="800"
-            height="600"
-            loading="lazy"
-            className="w-full h-full object-cover mix-blend-overlay opacity-60"
-          />
+          {project.image && !project.isPlaceholder && (
+            <img
+              src={project.image}
+              alt={project.title}
+              width="800"
+              height="600"
+              loading="lazy"
+              className="w-full h-full object-cover mix-blend-overlay opacity-60"
+            />
+          )}
+
+          {project.isPlaceholder && (
+            <div className="w-full h-full flex items-center justify-center text-gray-400 text-6xl font-display font-bold opacity-30">
+              ?
+            </div>
+          )}
 
           {/* Grid overlay pattern */}
           <div
@@ -97,37 +109,54 @@ const ProjectCard = ({ project, index, featured = false }) => {
         </motion.div>
 
         {/* Hover Overlay with gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.8 }}
-            animate={{
-              opacity: isHovered ? 1 : 0,
-              y: isHovered ? 0 : 20,
-              scale: isHovered ? 1 : 0.8,
-            }}
-            transition={{ duration: 0.3 }}
-          >
-            <a
-              href={project.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-6 py-3 bg-white text-gray-600 font-semibold rounded-full hover:bg-white hover:text-black transition-all duration-300 shadow-lg group/button"
+        {!project.isPlaceholder && (
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.8 }}
+              animate={{
+                opacity: isHovered ? 1 : 0,
+                y: isHovered ? 0 : 20,
+                scale: isHovered ? 1 : 0.8,
+              }}
+              transition={{ duration: 0.3 }}
             >
-              <span>View Project</span>
-              <ArrowUpRight className="w-4 h-4 group-hover/button:translate-x-1 group-hover/button:-translate-y-1 transition-transform duration-300" />
-            </a>
-          </motion.div>
-        </div>
+              <a
+                href={project.demoUrl || project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-6 py-3 bg-white text-gray-600 font-semibold rounded-full hover:bg-white hover:text-black transition-all duration-300 shadow-lg group/button"
+              >
+                <span>View Project</span>
+                <ArrowUpRight className="w-4 h-4 group-hover/button:translate-x-1 group-hover/button:-translate-y-1 transition-transform duration-300" />
+              </a>
+            </motion.div>
+          </div>
+        )}
 
-        {/* Year badge */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.2 + index * 0.1 }}
-          className="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm text-xs font-bold text-gray-800 rounded-full shadow-sm pointer-events-none"
-        >
-          {project.year}
-        </motion.div>
+        {/* Placeholder hover overlay */}
+        {project.isPlaceholder && (
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20, scale: 0.8 }}
+              animate={{
+                opacity: isHovered ? 1 : 0,
+                y: isHovered ? 0 : 20,
+                scale: isHovered ? 1 : 0.8,
+              }}
+              transition={{ duration: 0.3 }}
+            >
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-6 py-3 bg-white text-gray-600 font-semibold rounded-full hover:bg-white hover:text-black transition-all duration-300 shadow-lg group/button"
+              >
+                <span>View GitHub</span>
+                <ArrowUpRight className="w-4 h-4 group-hover/button:translate-x-1 group-hover/button:-translate-y-1 transition-transform duration-300" />
+              </a>
+            </motion.div>
+          </div>
+        )}
       </div>
 
       {/* Project Info */}
@@ -137,39 +166,44 @@ const ProjectCard = ({ project, index, featured = false }) => {
             <h3 className="text-2xl lg:text-3xl font-display font-bold text-black group-hover:text-teal transition-colors duration-300">
               {project.title}
             </h3>
-            <p className="text-sm text-gray-500 font-medium mt-1 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-teal" />
-              {project.category}
-            </p>
+            {!project.isPlaceholder && (
+              <p className="text-sm text-gray-500 font-medium mt-1">
+                {project.technologies?.slice(0, 3).join(' • ')}
+              </p>
+            )}
           </div>
 
-          <motion.div
-            whileHover={{ rotate: 45, scale: 1.1 }}
-            className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-teal group-hover:text-white transition-all duration-300"
-          >
-            <ExternalLink className="w-5 h-5" />
-          </motion.div>
+          {!project.isPlaceholder && (
+            <motion.div
+              whileHover={{ rotate: 45, scale: 1.1 }}
+              className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-teal group-hover:text-white transition-all duration-300"
+            >
+              <ExternalLink className="w-5 h-5" />
+            </motion.div>
+          )}
         </div>
 
-        {featured && (
+        {featured && project.description && (
           <p className="text-gray-600 leading-relaxed">{project.description}</p>
         )}
 
         {/* Tech Tags with stagger animation */}
-        <div className="flex flex-wrap gap-2">
-          {project.tags.map((tag, idx) => (
-            <motion.span
-              key={idx}
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 + idx * 0.05 }}
-              className="px-4 py-1.5 bg-gradient-to-r from-teal-light/30 to-teal-light/20 text-teal-dark text-xs font-semibold rounded-full cursor-default border border-teal-light/20 pointer-events-none"
-            >
-              {tag}
-            </motion.span>
-          ))}
-        </div>
+        {project.technologies && project.technologies.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {project.technologies.map((tag, idx) => (
+              <motion.span
+                key={idx}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3 + idx * 0.05 }}
+                className="px-4 py-1.5 bg-gradient-to-r from-teal-light/30 to-teal-light/20 text-teal-dark text-xs font-semibold rounded-full cursor-default border border-teal-light/20 pointer-events-none"
+              >
+                {tag}
+              </motion.span>
+            ))}
+          </div>
+        )}
 
         {/* Bottom gradient accent */}
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-teal to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

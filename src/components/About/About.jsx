@@ -1,33 +1,11 @@
 import { motion } from 'framer-motion';
-import { Palette, Code2, BookOpen, Lightbulb } from 'lucide-react';
 import ServiceCard from './ServiceCard';
+import { SKILLS_EXPERIENCE } from '../../data/personalInfo';
 
-const services = [
-  {
-    number: '01',
-    icon: Palette,
-    title: 'UI/UX Design',
-    description: 'Creating intuitive and visually stunning interfaces that delight users and drive engagement through thoughtful design principles.',
-  },
-  {
-    number: '02',
-    icon: Code2,
-    title: 'Frontend Development',
-    description: 'Building responsive, performant web applications with modern frameworks and best practices for optimal user experience.',
-  },
-  {
-    number: '03',
-    icon: BookOpen,
-    title: 'Technical Writing',
-    description: 'Crafting clear, comprehensive documentation and guides that make complex technical concepts accessible to all audiences.',
-  },
-  {
-    number: '04',
-    icon: Lightbulb,
-    title: 'Consulting',
-    description: 'Providing strategic guidance on architecture, design systems, and development workflows to elevate your digital products.',
-  },
-];
+const skillsWithNumbers = SKILLS_EXPERIENCE.map((skill, index) => ({
+  ...skill,
+  number: `0${index + 1}`,
+}));
 
 const About = () => {
   return (
@@ -43,17 +21,17 @@ const About = () => {
           className="text-center mb-16 lg:mb-20"
         >
           <h2 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold text-black mb-6">
-            How Can I{' '}
-            <span className="text-teal">Assist You?</span>
+            What I{' '}
+            <span className="text-teal">Bring</span>
           </h2>
           <p className="text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto">
-            I offer a range of services to help bring your digital vision to life
+            Technical skills, professional experience, and continuous learning
           </p>
         </motion.div>
 
-        {/* Services Grid */}
+        {/* Skills Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-          {services.map((service, index) => (
+          {skillsWithNumbers.map((service, index) => (
             <ServiceCard key={index} service={service} index={index} />
           ))}
         </div>

@@ -2,6 +2,7 @@ import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { Send, CheckCircle2, Mail, MapPin, Phone } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
+import { PERSONAL_INFO } from '../../data/personalInfo';
 
 const Contact = () => {
   const prefersReducedMotion = useReducedMotion();
@@ -293,21 +294,21 @@ const Contact = () => {
               {
                 Icon: Mail,
                 label: 'Email',
-                value: 'hello@example.com',
-                href: 'mailto:hello@example.com',
-                ariaLabel: 'Send email to hello@example.com'
+                value: PERSONAL_INFO.email,
+                href: `mailto:${PERSONAL_INFO.email}`,
+                ariaLabel: `Send email to ${PERSONAL_INFO.email}`
               },
               {
                 Icon: Phone,
                 label: 'Phone',
-                value: '+1 (555) 123-4567',
-                href: 'tel:+15551234567',
-                ariaLabel: 'Call +1 (555) 123-4567'
+                value: PERSONAL_INFO.phone,
+                href: `tel:${PERSONAL_INFO.phone.replace(/[^0-9+]/g, '')}`,
+                ariaLabel: `Call ${PERSONAL_INFO.phone}`
               },
               {
                 Icon: MapPin,
                 label: 'Location',
-                value: 'San Francisco, CA',
+                value: PERSONAL_INFO.location,
                 href: null,
                 ariaLabel: null
               },

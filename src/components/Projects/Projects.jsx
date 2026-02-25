@@ -1,47 +1,7 @@
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import ProjectCard from './ProjectCard';
-
-// Placeholder project data
-const projects = [
-  {
-    title: 'E-Commerce Platform',
-    category: 'Web Application',
-    year: '2024',
-    description: 'A modern, fully-featured e-commerce platform with real-time inventory management, payment processing, and advanced analytics dashboard.',
-    image: 'https://images.unsplash.com/photo-1661956602116-aa6865609028?w=800&h=600&fit=crop',
-    bgColor: '#9CA986',
-    tags: ['React', 'Node.js', 'MongoDB', 'Stripe'],
-    link: '#',
-  },
-  {
-    title: 'AI Dashboard',
-    category: 'SaaS Product',
-    year: '2024',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=450&fit=crop',
-    bgColor: '#5CB5B5',
-    tags: ['Next.js', 'TypeScript', 'OpenAI'],
-    link: '#',
-  },
-  {
-    title: 'Design System',
-    category: 'UI Library',
-    year: '2023',
-    image: 'https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=600&h=450&fit=crop',
-    bgColor: '#C4B5FD',
-    tags: ['React', 'Storybook', 'Tailwind'],
-    link: '#',
-  },
-  {
-    title: 'Mobile Banking App',
-    category: 'Mobile Design',
-    year: '2023',
-    image: 'https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=600&h=450&fit=crop',
-    bgColor: '#A5F3FC',
-    tags: ['Figma', 'React Native', 'UI/UX'],
-    link: '#',
-  },
-];
+import { PROJECTS } from '../../data/personalInfo';
 
 const Projects = () => {
   return (
@@ -78,12 +38,12 @@ const Projects = () => {
         <div className="space-y-8">
 
           {/* Featured Project */}
-          <ProjectCard project={projects[0]} index={0} featured={true} />
+          <ProjectCard project={PROJECTS[0]} index={0} featured={true} />
 
           {/* Grid of Projects */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {projects.slice(1).map((project, index) => (
-              <ProjectCard key={index} project={project} index={index + 1} />
+            {PROJECTS.slice(1).map((project, index) => (
+              <ProjectCard key={project.id} project={project} index={index + 1} />
             ))}
           </div>
         </div>
