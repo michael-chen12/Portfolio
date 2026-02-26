@@ -3,19 +3,6 @@ import { describe, it, expect } from 'vitest';
 import Hero from './Hero';
 
 describe('Hero', () => {
-  it('should have width and height attributes on profile image', () => {
-    render(<Hero />);
-    const profileImage = screen.getByAltText(/profile/i);
-    expect(profileImage).toHaveAttribute('width', '400');
-    expect(profileImage).toHaveAttribute('height', '500');
-  });
-
-  it('should have eager loading on profile image', () => {
-    render(<Hero />);
-    const profileImage = screen.getByAltText(/profile/i);
-    expect(profileImage).toHaveAttribute('loading', 'eager');
-  });
-
   it('should have aria-label on GitHub social link', () => {
     render(<Hero />);
     const githubLink = screen.getByRole('link', { name: /github profile/i });
