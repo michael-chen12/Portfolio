@@ -116,7 +116,7 @@ describe('Contact', () => {
 
       // Wait for success message to appear
       await waitFor(() => {
-        expect(screen.getByText(/message sent!/i)).toBeInTheDocument();
+        expect(screen.getByText(/message sent successfully!/i)).toBeInTheDocument();
       });
     });
 
@@ -200,7 +200,7 @@ describe('Contact', () => {
 
       // Wait for success message
       await waitFor(() => {
-        expect(screen.getByText(/message sent!/i)).toBeInTheDocument();
+        expect(screen.getByText(/message sent successfully!/i)).toBeInTheDocument();
       });
 
       // Wait for form to clear (happens after 3 second delay)

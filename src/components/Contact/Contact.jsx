@@ -132,23 +132,21 @@ const Contact = () => {
           onSubmit={handleSubmit}
           className="bg-white/80 backdrop-blur-xl rounded-3xl p-8 lg:p-12 shadow-float space-y-6 border border-white/50 relative overflow-hidden"
         >
-          {/* Success overlay */}
+          {/* Success toast notification */}
           <AnimatePresence mode="wait">
             {isSuccess && (
               <motion.div
-                key="success-overlay"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
-                className="absolute inset-0 bg-teal/95 backdrop-blur-sm z-50 flex items-center justify-center rounded-3xl pointer-events-none"
+                key="success-toast"
+                initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+                className="absolute top-4 left-4 right-4 bg-gradient-to-r from-teal to-teal-dark text-white px-6 py-4 rounded-2xl shadow-float z-50 flex items-center gap-3"
               >
-                <div className="text-center text-white space-y-4">
-                  <CheckCircle2 className="w-20 h-20 mx-auto" />
-                  <h3 className="text-2xl font-display font-bold">
-                    Message Sent!
-                  </h3>
-                  <p>I'll get back to you soon.</p>
+                <CheckCircle2 className="w-6 h-6 flex-shrink-0" />
+                <div className="flex-1">
+                  <p className="font-display font-semibold text-base">Message sent successfully!</p>
+                  <p className="text-sm text-white/90 mt-0.5">I'll get back to you soon.</p>
                 </div>
               </motion.div>
             )}
