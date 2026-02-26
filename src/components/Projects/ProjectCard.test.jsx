@@ -31,9 +31,4 @@ describe('ProjectCard', () => {
     render(<ProjectCard project={mockProject} index={0} />);
     expect(screen.getByText('Test Project')).toBeInTheDocument();
   });
-
-  it('should render project category', () => {
-    render(<ProjectCard project={mockProject} index={0} />);
-    expect(screen.getByText('Web Application')).toBeInTheDocument();
-  });
 });

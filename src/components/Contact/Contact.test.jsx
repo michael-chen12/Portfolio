@@ -25,18 +25,18 @@ describe('Contact', () => {
   it('should have aria-label on email link', () => {
     render(<Contact />);
     const emailLink = screen.getByRole('link', { name: /send email/i });
-    expect(emailLink).toHaveAttribute('aria-label', 'Send email to hello@example.com');
+    expect(emailLink).toHaveAttribute('aria-label', 'Send email to chen.michael40@gmail.com');
   });
 
   it('should have aria-label on phone link', () => {
     render(<Contact />);
     const phoneLink = screen.getByRole('link', { name: /call/i });
-    expect(phoneLink).toHaveAttribute('aria-label', 'Call +1 (555) 123-4567');
+    expect(phoneLink).toHaveAttribute('aria-label', 'Call +886-901-365-501');
   });
 
   it('should render location as div, not link', () => {
     render(<Contact />);
-    const locationText = screen.getByText(/san francisco, ca/i);
+    const locationText = screen.getByText(/new taipei city, taiwan/i);
     // Location should be inside a div wrapper, not an anchor
     expect(locationText.closest('a')).toBeNull();
   });
@@ -116,7 +116,7 @@ describe('Contact', () => {
 
       // Wait for success message to appear
       await waitFor(() => {
-        expect(screen.getByText(/message sent!/i)).toBeInTheDocument();
+        expect(screen.getByText(/message sent successfully!/i)).toBeInTheDocument();
       });
     });
 
@@ -200,7 +200,7 @@ describe('Contact', () => {
 
       // Wait for success message
       await waitFor(() => {
-        expect(screen.getByText(/message sent!/i)).toBeInTheDocument();
+        expect(screen.getByText(/message sent successfully!/i)).toBeInTheDocument();
       });
 
       // Wait for form to clear (happens after 3 second delay)
