@@ -41,6 +41,29 @@ describe('Contact', () => {
     expect(locationText.closest('a')).toBeNull();
   });
 
+  it('should allow form inputs to be clicked when success overlay is hidden', async () => {
+    const user = userEvent.setup();
+    render(<Contact />);
+
+    // Form inputs should be clickable on initial render (before any submission)
+    const nameInput = screen.getByLabelText(/your name/i);
+    const emailInput = screen.getByLabelText(/email address/i);
+    const messageInput = screen.getByLabelText(/your message/i);
+
+    // These interactions should work (not be blocked by the hidden success overlay)
+    await user.click(nameInput);
+    await user.type(nameInput, 'Test');
+    expect(nameInput).toHaveValue('Test');
+
+    await user.click(emailInput);
+    await user.type(emailInput, 'test@example.com');
+    expect(emailInput).toHaveValue('test@example.com');
+
+    await user.click(messageInput);
+    await user.type(messageInput, 'Test message');
+    expect(messageInput).toHaveValue('Test message');
+  });
+
   describe('Form Submission', () => {
     let fetchSpy;
 
