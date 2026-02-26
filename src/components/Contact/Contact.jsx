@@ -61,13 +61,12 @@ const Contact = () => {
       }
 
       // Success!
-
+      setIsSubmitting(false);
       setIsSuccess(true);
 
       // Reset form after success
       setTimeout(() => {
         setFormData({ name: "", email: "", message: "" });
-        setIsSubmitting(false);
         setIsSuccess(false);
       }, 3000);
     } catch (err) {
@@ -134,9 +133,10 @@ const Contact = () => {
           className="bg-white/80 backdrop-blur-xl rounded-3xl p-8 lg:p-12 shadow-float space-y-6 border border-white/50 relative overflow-hidden"
         >
           {/* Success overlay */}
-          <AnimatePresence>
+          <AnimatePresence mode="wait">
             {isSuccess && (
               <motion.div
+                key="success-overlay"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
