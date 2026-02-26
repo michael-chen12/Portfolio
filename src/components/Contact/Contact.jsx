@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useTransform } from "framer-motion";
+import { motion, useMotionValue, useTransform, AnimatePresence } from "framer-motion";
 import { Send, CheckCircle2, Mail, MapPin, Phone } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
@@ -134,17 +134,25 @@ const Contact = () => {
           className="bg-white/80 backdrop-blur-xl rounded-3xl p-8 lg:p-12 shadow-float space-y-6 border border-white/50 relative overflow-hidden"
         >
           {/* Success overlay */}
-          {isSuccess && (
-            <div className="absolute inset-0 bg-teal/95 backdrop-blur-sm z-50 flex items-center justify-center rounded-3xl">
-              <div className="text-center text-white space-y-4">
-                <CheckCircle2 className="w-20 h-20 mx-auto" />
-                <h3 className="text-2xl font-display font-bold">
-                  Message Sent!
-                </h3>
-                <p>I'll get back to you soon.</p>
-              </div>
-            </div>
-          )}
+          <AnimatePresence>
+            {isSuccess && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="absolute inset-0 bg-teal/95 backdrop-blur-sm z-50 flex items-center justify-center rounded-3xl pointer-events-none"
+              >
+                <div className="text-center text-white space-y-4">
+                  <CheckCircle2 className="w-20 h-20 mx-auto" />
+                  <h3 className="text-2xl font-display font-bold">
+                    Message Sent!
+                  </h3>
+                  <p>I'll get back to you soon.</p>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Error notification */}
           {error && (
